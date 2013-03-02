@@ -39,6 +39,7 @@ function encode.mime.unstructured_header_line(key, value)
   local open = false
   for char in string.gmatch(value, ".") do
     local encoded_char
+    local continuation_bytes = 0
     if string.find(char, "^[0-9A-Za-z%.%-]$") then
       encoded_char = char
     else
@@ -47,9 +48,17 @@ function encode.mime.unstructured_header_line(key, value)
         encoded_char = "_"
       else
         encoded_char = string.format("=%02X", byte)
+        -- avoid line breaks within UTF-8 multibyte characters
+        if byte >= 240 then
+          continuation_bytes = 3
+        elseif byte >= 224 then
+          continuation_bytes = 2
+        elseif byte >= 192 then
+          continuation_bytes = 1
+        end
       end
     end
-    if open and line_length + #encoded_char > 76 then
+    if open and line_length + #encoded_char + continuation_bytes * 3 > 76 then
       parts[#parts+1] = closing
       parts[#parts+1] = "\r\n"
       parts[#parts+1] = indentation

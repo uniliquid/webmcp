@@ -123,9 +123,7 @@ for num, directory in ipairs(directories) do
 end
 
 local function update_translation(key, value)
-  if #directories > 0 then
-    if translations[key] ~= nil then translations[key] = value end
-  else
+  if translations[key] ~= nil or value ~= false then
     translations[key] = value
   end
 end

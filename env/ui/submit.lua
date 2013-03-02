@@ -2,7 +2,8 @@
 ui.submit{
   name  = name,   -- optional HTML name
   value = value,  -- HTML value
-  text  = value   -- text on button
+  text  = value,   -- text on button
+  attr  = attr    -- table of HTML attributes, e.g. { class = "hide" }
 }
 
 This function places a HTML form submit button in the active slot. Currently the text displayed on the button and the value attribute are the same, so specifying both a 'value' and a 'text' makes no sense.
@@ -12,7 +13,7 @@ This function places a HTML form submit button in the active slot. Currently the
 function ui.submit(args)
   if slot.get_state_table().form_readonly == false then
     local args = args or {}
-    local attr = table.new(attr)
+    local attr = args.attr or {}
     attr.type  = "submit"
     attr.name  = args.name
     attr.value = args.value or args.text

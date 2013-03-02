@@ -30,6 +30,6 @@ function format.percentage(value, options)
   if options.decimal_shift == true then
     options.decimal_shift = options.precision + 2
   end
-  local suffix = options.hide_unit and "" or " %"
+  local suffix = options.hide_unit and "" or "%"
   return format.decimal(f * 100, options) .. suffix
 end
