@@ -11,7 +11,9 @@ This function inserts a field for a text in the active slot. For description of 
 function ui.field.text(args)
   ui.form_element(args, {fetch_value = true}, function(args)
     local value_string = format.string(args.value, args.format_options)
-    if args.readonly then
+    if args.rawreadonly then
+      ui.tag{ tag = args.tag, attr = args.attr, content = args.content }
+    elseif args.readonly then
       ui.tag{ tag = args.tag, attr = args.attr, content = value_string }
     else
       local attr = table.new(args.attr)

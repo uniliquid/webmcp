@@ -53,7 +53,7 @@ function ui.field.boolean(args)
       end
       ui.container{
         attr          = { class = "ui_radio_div" },
-        label         = args.true_as or "Yes",  -- TODO: localize
+        label         = args.true_as or _"Yes",  -- TODO: localize
         label_for     = attr.id,
         label_attr    = { class = "ui_radio_label" },
         content_first = true,
