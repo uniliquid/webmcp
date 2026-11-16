@@ -145,6 +145,10 @@ function set_cookie(args)
     )
     parts[#parts+1] = "path=" .. args.path
   end
+  assert(
+    args.secure == nil or type(args.secure) == "boolean",
+    "Illegal cookie secure flag"
+  )
   if args.secure then
     parts[#parts+1] = "secure"
   end
@@ -157,6 +161,10 @@ function set_cookie(args)
     )
     parts[#parts+1] = string.format("Max-Age=%.0f", args.max_age)
   end
+  assert(
+    args.http_only == nil or type(args.http_only) == "boolean",
+    "Illegal cookie http_only flag"
+  )
   if args.http_only then
     parts[#parts+1] = "HttpOnly"
   end
