@@ -133,7 +133,7 @@ function set_cookie(args)
   local parts = {"Set-Cookie: " .. args.name .. "=" .. args.value}
   if args.domain then
     assert(
-      string.find(args.path, "^[0-9A-Za-z%%/._~-]+$"),
+      string.find(args.domain, "^[0-9A-Za-z.-]+$"),
       "Illegal cookie domain"
     )
     parts[#parts+1] = "domain=" .. args.domain

@@ -80,6 +80,9 @@ check_error("same_site None", with{ same_site = "None" }, "Illegal cookie same_s
 check_error("same_site lower case", with{ same_site = "lax" }, "Illegal cookie same_site")
 check_error("same_site boolean", with{ same_site = true }, "Illegal cookie same_site")
 check_error("value with a semicolon", with{ value = "a;HttpOnly" }, "Illegal cookie value")
+check_header("domain", with{ domain = "lf.example.org", path = "/" }, prefix .. "; domain=lf.example.org; path=/")
+check_error("domain with a semicolon", with{ domain = "example.org;HttpOnly", path = "/" }, "Illegal cookie domain")
+check_error("domain with a slash", with{ domain = "example.org/x" }, "Illegal cookie domain")
 check_error("path with a semicolon", with{ path = "/;x" }, "Illegal cookie path")
 
 -- request.set_cookie: defaults from the base URL, new arguments passed on.
