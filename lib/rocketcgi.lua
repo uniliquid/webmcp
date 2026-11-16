@@ -114,14 +114,17 @@ end
 
 --[[--
 rocketcgi.set_cookie{
-  name   = name,       -- name of cookie
-  value  = value,      -- value of cookie
-  domain = domain,     -- domain where cookie is transmitted
-  path   = path,       -- path where cookie is transmitted
-  secure = secure      -- boolean, indicating if cookie should only be transmitted over HTTPS
+  name      = name,       -- name of cookie
+  value     = value,      -- value of cookie
+  domain    = domain,     -- domain where cookie is transmitted
+  path      = path,       -- path where cookie is transmitted
+  secure    = secure,     -- boolean, indicating if cookie should only be transmitted over HTTPS
+  max_age   = max_age,    -- optional non-negative integer: lifetime in seconds (Max-Age); unset: session cookie
+  http_only = http_only,  -- optional boolean: cookie not readable by scripts (HttpOnly)
+  same_site = same_site   -- optional "Strict" or "Lax" (SameSite)
 }
 
-Sends a header line setting a cookie. NOTE: Currently only session cookies are supported.
+Sends a header line setting a cookie. Without max_age, the cookie is a session cookie (it ends when the browser is closed). The attributes are sent in this order: domain, path, secure, Max-Age, HttpOnly, SameSite.
 
 --]]--
 function set_cookie(args)
@@ -144,6 +147,25 @@ function set_cookie(args)
   end
   if args.secure then
     parts[#parts+1] = "secure"
+  end
+  if args.max_age ~= nil then
+    assert(
+      type(args.max_age) == "number" and
+      math.floor(args.max_age) == args.max_age and
+      args.max_age >= 0 and args.max_age < 2^53,
+      "Illegal cookie max_age"
+    )
+    parts[#parts+1] = string.format("Max-Age=%.0f", args.max_age)
+  end
+  if args.http_only then
+    parts[#parts+1] = "HttpOnly"
+  end
+  if args.same_site ~= nil then
+    assert(
+      args.same_site == "Strict" or args.same_site == "Lax",
+      "Illegal cookie same_site"
+    )
+    parts[#parts+1] = "SameSite=" .. args.same_site
   end
   add_header(table.concat(parts, "; "))
 end
